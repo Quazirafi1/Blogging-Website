@@ -24,4 +24,9 @@ router.route('/posts/edit/:id')
 router.route('/posts/delete/:id')
     .delete(adminController.deletePost);
 
+//admin category route
+router.route('/category')
+    .get(adminController.getCategories)
+    .post(adminController.createCategories);
+
 module.exports = router;

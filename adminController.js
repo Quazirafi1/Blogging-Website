@@ -1,5 +1,5 @@
 const Post = require('../models/PostModel').Post;
-
+const Category = require('../models/CategoryModel').Category;
 module.exports = {
     index: (req, res) => {
         res.render('admin/index');
@@ -50,6 +50,27 @@ module.exports = {
                req.flash('success-message', 'the post ${deletedPost.title} has been deleted.');
                res.redirect('/admin/posts');
             });
+    },
+
+    //all category methods
+
+    getCategories: (req, res) => {
+        Category.find().then(cats => {
+           res.render('admin/category/index', {categories: cats});
+        });
+    },
+    createCategories: (req, res) => {
+        var categoryName = req.body.name;
+        //console.log(categoryName);
+        if(categoryName)
+        {
+            const newCategory = new Category({
+                title: categoryName
+            });
+            newCategory.save().then(category => {
+                res.status(200).json(category);
+            });
+        }
     }
 
 };
