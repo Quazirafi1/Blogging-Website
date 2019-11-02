@@ -27,6 +27,8 @@ module.exports = {
             req.flash('success-message', 'post created successfully.');
             res.redirect('/admin/posts');
         });
+
+
     },
 
     createPosts: (req, res) => {
@@ -40,6 +42,14 @@ module.exports = {
             res.render('admin/posts/edit', {post: post});
         });
 
+    },
+
+    deletePost: (req, res) => {
+        Post.findByIdAndDelete(req.params.id)
+            .then(deletedPost => {
+               req.flash('success-message', 'the post ${deletedPost.title} has been deleted.');
+               res.redirect('/admin/posts');
+            });
     }
 
 };

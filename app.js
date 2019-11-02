@@ -8,6 +8,7 @@ const {mongoDbUrl, PORT} = require('./config/configuration');
 const flash = require('connect-flash');
 //const {PORT} = require('./config/configuration');
 const session = require('express-session');
+const methodOverride = require('method-override');
 
 const app = express();
 
@@ -36,10 +37,13 @@ app.use(session({
 
 app.use(flash());
 app.use(globalVariables);
+
 /* Setup View Engine To Use Handlebars */
 app.engine('handlebars', hbs({defaultLayout: 'default'}));
 app.set('view engine' , 'handlebars');
 
+/* method override middleware */
+app.use(methodOverride('newMethod'));
 
 /* Routes */
 const defaultRoutes = require('./routes/defaultRoutes');
