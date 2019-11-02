@@ -13,10 +13,13 @@ module.exports = {
 
     submitPosts: (req, res) => {
         //form validation remaining
+        const commentsAllowed= req.body.allowComments ? true:false;
+
         const newPost= new Post({
             title: req.body.title,
             description: req.body.description,
-            status: req.body.status
+            status: req.body.status,
+            allowComments: commentsAllowed
         });
 
         newPost.save().then(post =>{
@@ -28,5 +31,15 @@ module.exports = {
 
     createPosts: (req, res) => {
         res.render('admin/posts/create');
+    },
+
+    editPost: (req, res) => {
+        const id = req.params.id;
+
+        Post.findById(id).then(post => {
+            res.render('admin/posts/edit', {post: post});
+        });
+
     }
+
 };
