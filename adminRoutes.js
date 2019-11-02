@@ -1,13 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const adminController = require('../controllers/adminController');
+const {isUserAuthenticated} = require("../config/customFunctions");
 
-
-
-router.all('/*', (req, res, next) => {
-
+router.all('/*',isUserAuthenticated, (req, res, next) => {
+    
     req.app.locals.layout = 'admin';
-
+    
     next();
 });
 
@@ -21,17 +20,17 @@ router.route('/')
 
 router.route('/posts')
     .get(adminController.getPosts);
-
+    
 
 
 router.route('/posts/create')
-    .get(adminController.createPostsGet)
-    .post(adminController.submitPosts);
+    .get(adminController.getCreatePostPage)
+    .post(adminController.submitCreatePostPage);
 
 
 router.route('/posts/edit/:id')
-    .get(adminController.editPost)
-    .put(adminController.editPostSubmit);
+    .get(adminController.getEditPostPage)
+    .put(adminController.submitEditPostPage);
 
 
 router.route('/posts/delete/:id')
@@ -41,12 +40,17 @@ router.route('/posts/delete/:id')
 /* ADMIN CATEGORY ROUTES*/
 
 router.route('/category')
-    .get(adminController.getCategories)
+    .get(adminController.getCategories);
+
+
+router.route('/category/create')
     .post(adminController.createCategories);
 
+
 router.route('/category/edit/:id')
-    .get(adminController.editCategoriesGetRoute)
-    .post(adminController.editCategoriesPostRoute);
+    .get(adminController.getEditCategoriesPage)
+    .post(adminController.submitEditCategoriesPage);
+
 
 module.exports = router;
 
