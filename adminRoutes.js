@@ -1,32 +1,50 @@
 const express = require('express');
 const router = express.Router();
-const adminController= require('../controllers/adminController');
+const adminController = require('../controllers/adminController');
 
-router.all('/*', (req, res, next) =>{
+
+
+router.all('/*', (req, res, next) => {
 
     req.app.locals.layout = 'admin';
+
     next();
 });
+
+/* DEFAULT ADMIN INDEX ROUTE*/
 
 router.route('/')
     .get(adminController.index);
 
+
+/* VARIOUS ADMIN POST ENDPOINTS */
+
 router.route('/posts')
     .get(adminController.getPosts);
 
+
+
 router.route('/posts/create')
-    .get(adminController.createPosts)
+    .get(adminController.createPostsGet)
     .post(adminController.submitPosts);
 
+
 router.route('/posts/edit/:id')
-    .get(adminController.editPost);
+    .get(adminController.editPost)
+    .put(adminController.editPostSubmit);
+
 
 router.route('/posts/delete/:id')
     .delete(adminController.deletePost);
 
-//admin category route
+
+/* ADMIN CATEGORY ROUTES*/
+
 router.route('/category')
     .get(adminController.getCategories)
     .post(adminController.createCategories);
 
+
+
 module.exports = router;
+

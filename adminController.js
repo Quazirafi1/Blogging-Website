@@ -1,23 +1,45 @@
 const Post = require('../models/PostModel').Post;
 const Category = require('../models/CategoryModel').Category;
+
+
 module.exports = {
+
     index: (req, res) => {
         res.render('admin/index');
+
     },
+
+
+    /* ADMIN POSTS ENDPOINTS */
+
 
     getPosts: (req, res) => {
         Post.find()
             .populate('category')
-            .then(posts=> {
-           res.render('admin/posts/index', {posts: posts});
+            .then(posts => {
+                res.render('admin/posts/index', {posts: posts});
+            });
+    },
+
+
+    createPostsGet: (req, res) => {
+        Category.find().then(cats => {
+
+            res.render('admin/posts/create', {categories: cats});
         });
+
+
     },
 
     submitPosts: (req, res) => {
-        //form validation remaining
-        const commentsAllowed= req.body.allowComments ? true:false;
 
-        const newPost= new Post({
+        const commentsAllowed = req.body.allowComments ? true : false;
+
+
+        // TODO : Form Data Validation Is Pending
+
+
+        const newPost = new Post({
             title: req.body.title,
             description: req.body.description,
             status: req.body.status,
@@ -25,58 +47,90 @@ module.exports = {
             category: req.body.category
         });
 
-        newPost.save().then(post =>{
-            console.log(post);
-            req.flash('success-message', 'post created successfully.');
+        newPost.save().then(post => {
+            req.flash('success-message', 'Post created successfully.');
             res.redirect('/admin/posts');
         });
 
 
     },
 
-    createPosts: (req, res) => {
-        Category.find().then(cats => {
-            res.render('admin/posts/create', {categories: cats});
-        });
-
-    },
 
     editPost: (req, res) => {
         const id = req.params.id;
 
-        Post.findById(id).then(post => {
-            res.render('admin/posts/edit', {post: post});
-        });
+        Post.findById(id)
+            .then(post => {
+
+                Category.find().then(cats => {
+                    res.render('admin/posts/edit', {post: post, categories: cats});
+                });
+
+
+            })
+    },
+
+    editPostSubmit: (req, res) => {
+        const commentsAllowed = req.body.allowComments ? true : false;
+
+
+        const id = req.params.id;
+
+        Post.findById(id)
+            .then(post => {
+
+                post.title = req.body.title;
+                post.status = req.body.status;
+                post.allowComments = req.body.allowComments;
+                post.description = req.body.description;
+                post.category = req.body.category;
+
+
+                post.save().then(updatePost => {
+                    req.flash('success-message', `The Post ${updatePost.title} has been updated.`);
+                    res.redirect('/admin/posts');
+
+                });
+
+
+            });
 
     },
 
     deletePost: (req, res) => {
+
         Post.findByIdAndDelete(req.params.id)
             .then(deletedPost => {
-               req.flash('success-message', 'the post ${deletedPost.title} has been deleted.');
-               res.redirect('/admin/posts');
+                req.flash('success-message', `The post ${deletedPost.title} has been deleted.`);
+                res.redirect('/admin/posts');
             });
+
     },
 
-    //all category methods
 
+    /* ALL CATEGORY METHODS*/
     getCategories: (req, res) => {
         Category.find().then(cats => {
-           res.render('admin/category/index', {categories: cats});
+            res.render('admin/category/index', {categories: cats});
         });
     },
+
     createCategories: (req, res) => {
         var categoryName = req.body.name;
-        //console.log(categoryName);
-        if(categoryName)
-        {
+
+        if (categoryName) {
             const newCategory = new Category({
                 title: categoryName
             });
+
             newCategory.save().then(category => {
                 res.status(200).json(category);
             });
         }
+
+
     }
 
-};
+
+}
+

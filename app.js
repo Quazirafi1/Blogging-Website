@@ -9,6 +9,7 @@ const flash = require('connect-flash');
 //const {PORT} = require('./config/configuration');
 const session = require('express-session');
 const methodOverride = require('method-override');
+const {selectOption} = require('./config/customFunctions');
 
 const app = express();
 
@@ -39,7 +40,7 @@ app.use(flash());
 app.use(globalVariables);
 
 /* Setup View Engine To Use Handlebars */
-app.engine('handlebars', hbs({defaultLayout: 'default'}));
+app.engine('handlebars', hbs({defaultLayout: 'default', helpers: {select: selectOption}}));
 app.set('view engine' , 'handlebars');
 
 /* method override middleware */
