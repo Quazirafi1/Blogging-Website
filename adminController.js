@@ -6,10 +6,13 @@ module.exports = {
     },
 
     getPosts: (req, res) => {
-        res.render('admin/posts/index');
+        Post.find().then(posts=> {
+           res.render('admin/posts/index', {posts: posts});
+        });
     },
 
     submitPosts: (req, res) => {
+        //form validation remaining
         const newPost= new Post({
             title: req.body.title,
             description: req.body.description,
