@@ -3,6 +3,7 @@ const Category = require('../models/CategoryModel').Category;
 const Comment = require('../models/CommentModel').Comment;
 const bcrypt = require('bcryptjs');
 const User = require('../models/UserModel').User;
+const About = require('../models/AboutModel').About;
 
 
 module.exports = {
@@ -115,6 +116,14 @@ module.exports = {
             req.flash('error-message', 'Please Login To Comment');
             res.redirect('/login');
         }
+    },
+
+    /* about route */
+    getAbout: async (req, res) => {
+
+        const posts = await About.find();
+        console.log(posts);
+        res.render('default/about', {posts: posts});
     }
 
 };

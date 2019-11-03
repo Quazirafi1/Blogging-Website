@@ -5,28 +5,22 @@
                 <thead class="bg-dark">
                 <tr>
                     <th>Id</th>
-                    <th>Publisher</th>
-                    <th>Approve Comments</th>
-                    <th>Date</th>
-                    <th>Comment Body</th>
-                    <th>Delete</th>
+                    <th>Description</th>
+                    <th>Edit</th>
                 </tr>
                 </thead>/
                 <tbody class="text-dark">
-                {{#each comments}}
+
                     <tr>
                         <td>{{id}}</td>
-                        <td style="width: auto;">{{user.firstName}}{{user.lastName}}</td>
-                        <td><input type="checkbox" name="approveComments" class="approveComments" data-buttonid="{{id}}" {{#if commentIsApproved}}checked="checked"{{/if}} /></td>
-                        <td>{{date}}</td>
-                        <td>{{body}}</td>
+                        <td>{{description}}</td>
                         <td class="d-flex justify-content-center">
-                            <form action="/admin/comment/delete/{{_id}}?newMethod=DELETE" method="post">
-                                <button class="btn btn-sm btn-danger" type="submit">Delete</button>
+                            <form action="" method="post">
+                                <button class="btn btn-sm btn-danger" type="submit">Edit</button>
                             </form>
                         </td>
                     </tr>
-                {{/each}}
+
                 </tbody>
             </table>
         </div>

@@ -17,12 +17,13 @@ const CommentSchema = new Schema({
         type: Date,
         default: Date.now()
     },
-
+    
     commentIsApproved: {
         type: Boolean,
         default: false
     }
 
+
 });
 
-module.exports = {Comment: mongoose.model('comment', CommentSchema )};
+module.exports = {Comment: mongoose.model('comment', CommentSchema)};

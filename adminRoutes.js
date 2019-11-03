@@ -65,5 +65,9 @@ router.route('/comment')
 router.route('/comment/delete/:id')
     .delete(adminController.deleteComment);
 
+/* admin about routes */
+router.route('/about')
+    .get(adminController.getAbout);
+
 module.exports = router;
 

@@ -83,4 +83,7 @@ router.get('/logout', (req, res) => {
     res.redirect('/');
 });
 
+router.route('/about')
+    .get(defaultController.getAbout);
+
 module.exports = router;

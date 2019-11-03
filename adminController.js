@@ -1,6 +1,7 @@
 const Post = require('../models/PostModel').Post;
 const Category = require('../models/CategoryModel').Category;
 const Comment = require('../models/CommentModel').Comment;
+const About = require('../models/AboutModel').About;
 const {isEmpty} = require('../config/customFunctions');
 
 module.exports = {
@@ -201,6 +202,15 @@ module.exports = {
                 req.flash('success-message', `Comment has been deleted.`);
                 res.redirect('/admin/comment');
             });
+    },
+
+    //about route section
+    getAbout: (req, res)=>{
+        About.find()
+            .populate('about')
+            .then(about => {
+                res.render('admin/about/index', {about: about});
+            })
     }
 
 };    
