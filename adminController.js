@@ -192,6 +192,15 @@ module.exports = {
                 res.status(201).send('FAIL');
             });
         });
+    },
+
+    deleteComment: (req, res) => {
+        Comment.findByIdAndDelete(req.params.id)
+            .then(deletedCategory => {
+                //console.log(deletedCategory.title);
+                req.flash('success-message', `Comment has been deleted.`);
+                res.redirect('/admin/comment');
+            });
     }
 
 };    

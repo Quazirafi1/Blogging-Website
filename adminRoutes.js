@@ -62,5 +62,8 @@ router.route('/comment')
     .get(adminController.getComments)
     .post(adminController.approveComments);
 
+router.route('/comment/delete/:id')
+    .delete(adminController.deleteComment);
+
 module.exports = router;
 
