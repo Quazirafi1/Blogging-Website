@@ -159,6 +159,16 @@ module.exports = {
         }
     },
 
+    deleteCategory: (req, res) => {
+        console.log(req.params.id);
+        Category.findByIdAndDelete(req.params.id)
+            .then(deletedCategory => {
+                //console.log(deletedCategory.title);
+                req.flash('success-message', `The category has been deleted.`);
+                res.redirect('/admin/category');
+            });
+    },
+
     //comment route section
     getComments: (req, res)=>{
         Comment.find()

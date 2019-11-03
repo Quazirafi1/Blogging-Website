@@ -54,6 +54,9 @@ router.route('/category/edit/:id')
     .post(adminController.submitEditCategoriesPage);
 
 
+router.route('/category/delete/:id')
+    .delete(adminController.deleteCategory);
+
 /* admin comment routes */
 router.route('/comment')
     .get(adminController.getComments)
