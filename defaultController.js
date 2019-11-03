@@ -1,5 +1,6 @@
 const Post = require('../models/PostModel').Post;
 const Category = require('../models/CategoryModel').Category;
+const Comment = require('../models/CommentModel').Comment;
 const bcrypt = require('bcryptjs');
 const User = require('../models/UserModel').User;
 
@@ -74,6 +75,45 @@ module.exports = {
                     });
                 }
             });
+        }
+    },
+
+    getSinglePost: (req, res) => {
+        const id = req.params.id;
+
+        Post.findById(id)
+            .populate({path: 'comments', populate: {path: 'user', model: 'user'}})
+            .then(post => {
+            if(!post){
+                res.status(404).json({message: 'Post not found'});
+            }
+            else {
+                res.render('default/singlePost', {post: post, comments: post.comments});
+            }
+        })
+    },
+
+    submitComment: (req, res) => {
+        if(req.user){
+            Post.findById(req.body.id).then(post => {
+                const newComment = new Comment({
+                    user: req.user.id,
+                    body: req.body.comment_body
+                });
+
+                post.comments.push(newComment);
+                post.save().then(savedPost => {
+                    newComment.save().then(savedComment => {
+                        req.flash('success-message', 'Comment has been submitted for review');
+                        res.redirect(`/post/${post._id}`);
+                    });
+                });
+            })
+        }
+
+        else{
+            req.flash('error-message', 'Please Login To Comment');
+            res.redirect('/login');
         }
     }
 

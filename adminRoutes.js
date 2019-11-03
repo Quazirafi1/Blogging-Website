@@ -10,16 +10,18 @@ router.all('/*',isUserAuthenticated, (req, res, next) => {
     next();
 });
 
-/* DEFAULT ADMIN INDEX ROUTE*/
+/* DEFAULT ADMIN INDEX*/
 
 router.route('/')
     .get(adminController.index);
 
 
-/* VARIOUS ADMIN POST ENDPOINTS */
+/* admin endpoints */
 
 router.route('/posts')
     .get(adminController.getPosts);
+
+
     
 
 
@@ -51,6 +53,10 @@ router.route('/category/edit/:id')
     .get(adminController.getEditCategoriesPage)
     .post(adminController.submitEditCategoriesPage);
 
+
+/* admin comment routes */
+router.route('/comment')
+    .get(adminController.getComments);
 
 module.exports = router;
 

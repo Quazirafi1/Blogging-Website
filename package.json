@@ -1,12 +1,12 @@
 {
-  "name": "cms-tutorial",
+  "name": "cms",
   "version": "1.0.1",
-  "description": "Nodejs CMS Application",
+  "description": "Nodejs blogging",
   "main": "app.js",
   "scripts": {
     "start": "nodemon app.js"
   },
-  "author": "Indranil Mukherjee",
+  "author": "Quazi",
   "license": "ISC",
   "dependencies": {
     "bcryptjs": "^2.4.3",

@@ -1,5 +1,6 @@
 const Post = require('../models/PostModel').Post;
 const Category = require('../models/CategoryModel').Category;
+const Comment = require('../models/CommentModel').Comment;
 const {isEmpty} = require('../config/customFunctions');
 
 module.exports = {
@@ -22,7 +23,7 @@ module.exports = {
     },
 
 
-    createPostsGet: (req, res) => {
+    getCreatePostPage: (req, res) => {
         Category.find().then(cats => {
 
             res.render('admin/posts/create', {categories: cats});
@@ -31,25 +32,23 @@ module.exports = {
 
     },
 
-    submitPosts: (req, res) => {
+    submitCreatePostPage: (req, res) => {
 
-        const commentsAllowed = req.body.allowComments ? true : false;
+        const commentsAllowed = !!req.body.allowComments;
 
+        // Check for any input file
+        let filename = '';
 
-        //check input file
-        let filename='';
-        if (!isEmpty(req.files)){
+        if (!isEmpty(req.files)) {
             let file = req.files.uploadedFile;
             filename = file.name;
             let uploadDir = './public/uploads/';
 
-            file.mv(uploadDir+filename, (err) => {
+            file.mv(uploadDir + filename, (err) => {
                 if (err)
                     throw err;
             });
         }
-        //console.log(req.files);
-
 
         const newPost = new Post({
             title: req.body.title,
@@ -64,37 +63,27 @@ module.exports = {
             req.flash('success-message', 'Post created successfully.');
             res.redirect('/admin/posts');
         });
-
-
     },
 
-
-    editPost: (req, res) => {
+    getEditPostPage: (req, res) => {
         const id = req.params.id;
 
         Post.findById(id)
             .then(post => {
-
                 Category.find().then(cats => {
                     res.render('admin/posts/edit', {post: post, categories: cats});
                 });
-
-
-            })
+            });
     },
 
-    editPostSubmit: (req, res) => {
-        const commentsAllowed = req.body.allowComments ? true : false;
-
-
+    submitEditPostPage: (req, res) => {
+        const commentsAllowed = !!req.body.allowComments;
         const id = req.params.id;
-
         Post.findById(id)
             .then(post => {
-
                 post.title = req.body.title;
                 post.status = req.body.status;
-                post.allowComments = req.body.allowComments;
+                post.allowComments = commentsAllowed;
                 post.description = req.body.description;
                 post.category = req.body.category;
 
@@ -102,12 +91,8 @@ module.exports = {
                 post.save().then(updatePost => {
                     req.flash('success-message', `The Post ${updatePost.title} has been updated.`);
                     res.redirect('/admin/posts');
-
                 });
-
-
             });
-
     },
 
     deletePost: (req, res) => {
@@ -117,19 +102,19 @@ module.exports = {
                 req.flash('success-message', `The post ${deletedPost.title} has been deleted.`);
                 res.redirect('/admin/posts');
             });
-
     },
 
 
     /* ALL CATEGORY METHODS*/
     getCategories: (req, res) => {
+
         Category.find().then(cats => {
             res.render('admin/category/index', {categories: cats});
         });
     },
 
     createCategories: (req, res) => {
-        var categoryName = req.body.name;
+        let categoryName = req.body.name;
 
         if (categoryName) {
             const newCategory = new Category({
@@ -141,32 +126,48 @@ module.exports = {
             });
         }
 
-
     },
 
-    editCategoriesGetRoute: async (req, res) => {
+    getEditCategoriesPage: async (req, res) => {
         const catId = req.params.id;
+
         const cats = await Category.find();
 
-        Category.findById(catId).then( cat => {
-           res.render('admin/category/edit', {category: cat, categories: cats});
+
+        Category.findById(catId).then(cat => {
+
+            res.render('admin/category/edit', {category: cat, categories: cats});
+
         });
     },
 
-    editCategoriesPostRoute: (req, res) => {
+
+    submitEditCategoriesPage: (req, res) => {
         const catId = req.params.id;
         const newTitle = req.body.name;
 
-        if(newTitle)
-        {
+        if (newTitle) {
             Category.findById(catId).then(category => {
+
                 category.title = newTitle;
-                category.save().then(updated=> {
+
+                category.save().then(updated => {
                     res.status(200).json({url: '/admin/category'});
-                })
+                });
+
             });
         }
+    },
+
+    //comment route section
+    getComments: (req, res)=>{
+        Comment.find()
+            .populate('user')
+            .then(comments => {
+                res.render('admin/comments/index', {comments: comments});
+            })
     }
 
-};
 
+};    
+    
